@@ -286,11 +286,11 @@ const Board = () => {
            
             </table>
             {/* <button onClick={solveHandler} className={`${(color === true)? '#96948d' : '#c73828'}`} >Solve</button> */}
-            <button onClick={test2Handler} style={{ backgroundColor: color ? "black" : "white" }}>test2</button>
-            <button onClick={testHandler} style={{ backgroundColor: color ? "black" : "white" }}>test</button>
+            <button onClick={test2Handler} style={{ backgroundColor: color ? "black" : "white" }}>simulate</button>
+            {/* <button onClick={testHandler} style={{ backgroundColor: color ? "black" : "white" }}>test</button>
             <button onClick={handleNext} style={{ backgroundColor: color ? "black" : "white" }}>next</button>
             <button onClick={solveHandler} style={{ backgroundColor: color ? "black" : "white" }}>Solve</button>
-            <button onClick={clearBoard} style={{ backgroundColor: color ? "black" : "white" }}>Clear Board</button>
+            <button onClick={clearBoard} style={{ backgroundColor: color ? "black" : "white" }}>Clear Board</button> */}
         </div>
     )
 }
