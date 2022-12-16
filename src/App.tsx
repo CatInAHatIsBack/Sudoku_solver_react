@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Board from './Components/Board'
+import Board from './Components/Sudoku_board/Board'
 
 function App() {
 

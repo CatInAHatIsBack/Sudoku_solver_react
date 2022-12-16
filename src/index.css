@@ -26,6 +26,8 @@
   text-align: center; */
 /* } */
 table {
+  margin: auto;
+  align-items: center;
   border-collapse: collapse;
   border: 2px solid rgba(188, 108, 108, 0.123);
   background-color: rgb(172, 180, 180);
@@ -40,7 +42,21 @@ table {
   padding: 0px;
   border: 1px solid white;
 }
+
+.buttons {
+  /* color: green; */
+  /* background-color: green; */
+  /* margin-right: auto; */
+  /* margin-left: auto; */
+  display: flex;
+
+}
 button {
+
+  margin: auto;
+  /* margin-right: auto; */
+  /* margin-left: 100px; */
+  justify-content: center;
   margin-top: 20px;
   /* background-color: orange; */
   color: red;

@@ -1,6 +1,6 @@
 import React , { Component }from 'react'
 import { useState } from 'react';
-
+import  './slider.css'
 // const getInitialGrid = () => [
 //     // row        col col
 //     // row
@@ -28,16 +28,33 @@ const getInitialGrid = () => [
         [0, 2, 0, 4, 0, 0, 1, 9, 0,],
         [0, 0, 9, 8, 1, 5, 6, 0, 0,],
 ];
+const getInitialGrid2 = () => [
+    [3, 0, 6, 5, 0, 8, 4, 0, 0],
+    [5, 2, 0, 0, 0, 0, 0, 0, 0],
+    [0, 8, 7, 0, 0, 0, 0, 3, 1],
+    [0, 0, 3, 0, 1, 0, 0, 8, 0],
+    [9, 0, 0, 8, 6, 3, 0, 0, 5],
+    [0, 5, 0, 0, 9, 0, 6, 0, 0],
+    [1, 3, 0, 0, 0, 0, 2, 5, 0],
+    [0, 0, 0, 0, 0, 0, 0, 7, 4],
+    [0, 0, 5, 2, 0, 6, 3, 0, 0]
+]
+function getInitGrid() {
+    return getInitialGrid() 
+}
 var r = 0
 var c = 0
 let stack:number[][] = []
 let shouldinit: boolean = true;
+let startBoard: number[][]
+let simulateclicked: boolean = false
 const Board = () => {
 
-    const [grid, setGrid] = useState<number[][]>(getInitialGrid());
+    const [grid, setGrid] = useState<number[][]>(getInitGrid());
     const [color, setColor] = useState<boolean>(false);
-    const gridCopy = getInitialGrid() 
-
+    const gridCopy = getInitGrid() 
+    const [mySlider, setMySlider] = useState(10)
+    const [solvable, setSolvable] = useState(true)
     function setGridValue(rowIndex:number, colIndex:number, e:any) {
         // e.preventDefault();
         let value = parseInt(e.target.value) || 0;
@@ -164,8 +181,10 @@ const Board = () => {
     }
 
     function test2Handler(){
-        console.log(grid)
-        console.log(stack)
+        testHandler()
+        simulateclicked = true
+        // console.log(grid)
+        // console.log(stack)
         
         requestAF()
     }
@@ -180,7 +199,7 @@ const Board = () => {
     function requestAF(){
         
 
-        let steps = 100
+        let steps = mySlider 
         let newGrid = [...grid];
         if (stack.length > steps) {
             for (let i = 0;i < steps; i++){
@@ -224,18 +243,31 @@ const Board = () => {
     }
 
 
+
     function testHandler() {
-        if (shouldinit) {
-            shouldinit = false
-            let newGrid = Solve(copyGrid(grid))
-            console.log(newGrid)
-            console.log(stack)
+        // if (shouldinit) {
+            // shouldinit = false
+            // let testcopy = copyGrid(grid)
+
+            var testcopy  = grid.map(function(arr) {
+                return arr.slice();
+            });
+
+
+            let isSolved = Solve(testcopy)
+            setSolvable(isSolved) 
+            console.log('testcopy')
+            console.log(testcopy)
+            console.log("newGrid")
+            // console.log(newGrid)
+            console.log(grid)
             console.log(stack)
             console.log(solvedGrid)
             // itterateStack()
-            setGrid(getInitialGrid())
+            // setGrid(getInitialGrid())
+            // setGrid(testcopy)
             // test2Handler()
-        }
+        // }
     }
     async function waiter(board: number[][]){
         updateGrid(board)
@@ -259,7 +291,22 @@ const Board = () => {
     }
    
     const board = document.querySelector(".Board");
-    testHandler()
+    // testHandler()
+
+    // document.getElementById('myRange')!.addEventListener('change',function() {
+    //     this.setAttribute('value',this.value);
+    //   });
+    // const slider = document.getElementById("myRange");
+    function setSliderValue(e:any) {
+        setSliderValuePrinter(e)
+        setMySlider(e.target.value)
+    }
+    function setSliderValuePrinter(e:any){
+        console.log(e)
+        console.log(mySlider)
+        console.log(e.target.value)
+    }
+
     return (
         <div className='Board'>
 
@@ -285,13 +332,27 @@ const Board = () => {
             </tbody>
            
             </table>
-            {/* <button onClick={solveHandler} className={`${(color === true)? '#96948d' : '#c73828'}`} >Solve</button> */}
-            <button onClick={test2Handler} style={{ backgroundColor: color ? "black" : "white" }}>simulate</button>
-            {/* <button onClick={testHandler} style={{ backgroundColor: color ? "black" : "white" }}>test</button>
-            <button onClick={handleNext} style={{ backgroundColor: color ? "black" : "white" }}>next</button>
-            <button onClick={solveHandler} style={{ backgroundColor: color ? "black" : "white" }}>Solve</button>
-            <button onClick={clearBoard} style={{ backgroundColor: color ? "black" : "white" }}>Clear Board</button> */}
-        </div>
+            <div className='buttons'>
+                {/* <button onClick={solveHandler} className={`${(color === true)? '#96948d' : '#c73828'}`} >Solve</button> */}
+                <button onClick={test2Handler} style={{ backgroundColor: color ? "black" : "white" }}>simulate</button>
+                {/* <button onClick={testHandler} style={{ backgroundColor: color ? "black" : "white" }}>test</button>
+                <button onClick={handleNext} style={{ backgroundColor: color ? "black" : "white" }}>next</button>
+                <button onClick={solveHandler} style={{ backgroundColor: color ? "black" : "white" }}>Solve</button>
+                <button onClick={clearBoard} style={{ backgroundColor: color ? "black" : "white" }}>Clear Board</button> */}
+            </div>
+            <div className="slidecontainer">
+                <span className='nosolution' style={{ visibility: solvable ? 'hidden' : 'visible' }} >Board is not solvable</span>
+                <span className='nosolution' style={{ visibility: solvable && simulateclicked ? 'visible' : 'hidden' }} >Board will be solved in {stack.length}</span>
+                <span className='sliderinfo'>Set speed before start {mySlider}</span>
+                <input type="range" min="1" max="100" value={mySlider} className="slider" id="myRange" 
+                onChange={(e) => setSliderValue(e)}
+                // onChange={(e) => this.setAttribute('value',this.value)}
+                
+                 
+                
+                     />
+                </div>
+            </div>
     )
 }
 
