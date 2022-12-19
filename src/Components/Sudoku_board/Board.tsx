@@ -39,31 +39,43 @@ const getInitialGrid2 = () => [
     [0, 0, 0, 0, 0, 0, 0, 7, 4],
     [0, 0, 5, 2, 0, 6, 3, 0, 0]
 ]
+
+let my_grid =  [] 
 function getInitGrid() {
     return getInitialGrid() 
 }
-var r = 0
-var c = 0
+
 let stack:number[][] = []
-let shouldinit: boolean = true;
-let startBoard: number[][]
 let simulateclicked: boolean = false
+
 const Board = () => {
 
     const [grid, setGrid] = useState<number[][]>(getInitGrid());
     const [color, setColor] = useState<boolean>(false);
-    const gridCopy = getInitGrid() 
+    const [ gridCopy, setGridCopy] = useState<number[][]>(getInitGrid())
     const [mySlider, setMySlider] = useState(10)
     const [solvable, setSolvable] = useState(true)
-    function setGridValue(rowIndex:number, colIndex:number, e:any) {
+    const [boardString, setBoardString] = useState('')
+
+    function setGridValue(rowIndex:number, colIndex:number, inputNum: number) {
         // e.preventDefault();
-        let value = parseInt(e.target.value) || 0;
+        let value = inputNum || 0;
         const newGrid = [...grid];
 
         if ( value >= 0 && value <=9 ) {
             newGrid[rowIndex][colIndex] = value
         }
         setGrid(newGrid)
+    }
+    function setcopyGridValue(rowIndex:number, colIndex:number, inputNum: number) {
+        // e.preventDefault();
+        let value = inputNum || 0;
+        const newGrid = [...gridCopy];
+
+        if ( value >= 0 && value <=9 ) {
+            newGrid[rowIndex][colIndex] = value
+        }
+        setGridCopy(newGrid)
     }
     function copyGrid(my_grid: number[][]) {
         return [...my_grid];
@@ -90,48 +102,11 @@ const Board = () => {
         }
         return true;
     }
-    // var r = 0
-    // var c = 0
-
-    function handleNext() {
-        next(copyGrid(grid))
-    }
-    async function timeout(delay: number) {
-        return new Promise( res => setTimeout(res, delay) );
-    }
-    function next(board: number[][]) {
-        if (r < 9 && c < 9) {
-            if ( board[r][c] === 0){ 
-                for (let n = 0 + 1; n < 9 + 1; n++) {
-                    if ( isValid( board, r, c, n )){
-                        board[r][c] = n
-                        if (next(board)){
-                            return copyGrid(board);
-                        }
-                        else {
-                            board[r][c] = 0;
-                        }
-                    }
-                }
-                return false
-            } 
-            // debugger
-            c+=1
-            updateGrid(board)
-            // await timeout(1000);
-            
-        }
-        else if (r < 9 && c >= 9) {
-            r+= 1
-            c= 0
-            next(board)
-        }
-        else{
-            return
-        }
-    }
+    
+    
     let solvedGrid = copyGrid(grid)
     function Solve(board: number[][]) {
+
 
         // loops through board
         for (let r = 0; r < 9; r++) {
@@ -144,7 +119,6 @@ const Board = () => {
                             stack.push([r,c,n]) 
                             // waiter(board)
                             if (Solve(board)){
-
                                 solvedGrid = copyGrid(board);
                                 return true
                             }
@@ -156,57 +130,31 @@ const Board = () => {
                     }
                     return false
                 }
-                
-
-                // waiter(board)
-                // debugger
             }
-
-            // await timeout(1);
-                // requestAnimationFrame(waiter)
-                // debugger
-            // debugger
-            // updateGrid(board)
-            // requestAnimationFrame(timeout(1000), updateGrid(board))
-            // setTimeout(requestAnimationFrame, 100)
-            // updateGrid(copyGrid(board))
-            // updater(copyGrid(board))
-            // debugger;
         }
         return true;
-        
-        // enter valuef
-        // check if valid
-        // recursively check next
     }
 
     function test2Handler(){
-        testHandler()
-        simulateclicked = true
-        // console.log(grid)
-        // console.log(stack)
-        
-        requestAF()
-    }
-    function itterateStack2() {
+        console.log(grid) 
+        // setHandler()
 
-        // console.log(stack.length)
-        // for (let i = 0; i < stack.length; i++){
-        //     requestAF() 
-        // }
+        solveHandler()
+        simulateclicked = true
+        requestAF()
+
     }
     
     function requestAF(){
         
-
         let steps = mySlider 
         let newGrid = [...grid];
         if (stack.length > steps) {
             for (let i = 0;i < steps; i++){
                 
                 let top:any = stack.shift() 
-                console.log(top)
-                console.log(stack.length)
+                // console.log(top)
+                // console.log(stack.length)
                 
                 newGrid[top[0]][top[1]] = top[2]
 
@@ -221,82 +169,75 @@ const Board = () => {
                 newGrid[top[0]][top[1]] = top[2]
                 setGrid(newGrid); 
         }
-            // newGrid[top[0], top[1],top[2]]
         if(stack.length > 0){
             requestAnimationFrame(requestAF)
         }
 
     }
-    function itterateStack() {
-        // grid.set
-        // take num from stack 
-        // make change to 
-        console.log("@@@@@")
-        console.log(grid)
-        let initial = getInitialGrid()
-        console.log("@@@@@")
+
+    let input = "3, 0, 6, 5, 0, 8, 4, 0, 0, 5, 2, 0, 0, 0, 0, 0, 0, 0,0, 8, 7, 0, 0, 0, 0, 3, 1, 0, 0, 3, 0, 1, 0, 0, 8, 0, 9, 0, 0, 8, 6, 3, 0, 0, 5, 0, 5, 0, 0, 9, 0, 6, 0, 0, 1, 3, 0, 0, 0, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 7, 4, 0, 0, 5, 2, 0, 6, 3, 0, 0"
+
+    function handleText() {
         
-        console.log(initial)
-        updateGrid(initial)
-        console.log("@@@@@")
-        console.log(grid)
-    }
+        
+        // let result = input 
+        let result = boardString
+        .split(',')
+        .map(element => element.trim())
+        .filter(element => element !== '');
+        if (result.length === 81) {
+           console.log(result) 
 
+           let count = 0
+            for (let r = 0; r < 9; r++) {
+                for (let c = 0; c < 9; c++) { 
+                    let num = parseInt(result[count])
+                    if(typeof(num) === 'number' && num >= 0 && num <= 9) {
+                        // console.log('number')
+                        setcopyGridValue(r,c,num)
 
-
-    function testHandler() {
-        // if (shouldinit) {
-            // shouldinit = false
-            // let testcopy = copyGrid(grid)
-
-            var testcopy  = grid.map(function(arr) {
-                return arr.slice();
-            });
-
-
-            let isSolved = Solve(testcopy)
-            setSolvable(isSolved) 
-            console.log('testcopy')
-            console.log(testcopy)
-            console.log("newGrid")
-            // console.log(newGrid)
+                        setGridValue(r,c,num)
+                    }
+                    console.log(num)
+                    count++
+                }
+            }
             console.log(grid)
-            console.log(stack)
-            console.log(solvedGrid)
-            // itterateStack()
-            // setGrid(getInitialGrid())
-            // setGrid(testcopy)
-            // test2Handler()
-        // }
+        }
+        
+        
+        
+
+        // if inputstring is 81 
+            // split , 
+            // strip
+            // check ints
+            // if all ints 
+            // set board
+        
     }
-    async function waiter(board: number[][]){
-        updateGrid(board)
-        await timeout(1);
+    function setHandler() {
+
 
     }
     function solveHandler() {
-        let newGrid = Solve(grid)
-        // debugger;
+        handleText()
+        var testcopy  = grid.map(function(arr) {
+            return arr.slice();
+        });
+
+        let isSolved = Solve(testcopy)
+        setSolvable(isSolved) 
+       
+
     }
-    function updateGrid(inGrid: number[][]) {
-        const newGrid = [...inGrid];
-        setGrid(newGrid);
-        // setGrid(inGrid);
-        // setTimeout(requestAnimationFrame, 100)
-      
-    }
+    
     function clearBoard() {
-        setColor(!color)
+        // setColor(!color)
         setGrid(getInitialGrid());
     }
    
-    const board = document.querySelector(".Board");
-    // testHandler()
-
-    // document.getElementById('myRange')!.addEventListener('change',function() {
-    //     this.setAttribute('value',this.value);
-    //   });
-    // const slider = document.getElementById("myRange");
+   
     function setSliderValue(e:any) {
         setSliderValuePrinter(e)
         setMySlider(e.target.value)
@@ -320,7 +261,7 @@ const Board = () => {
                             <td key={colIndex} className="cell">
                                 <input disabled={gridCopy[rowIndex][colIndex] !== 0} value={number === 0 ? '' : number} onChange={(e) =>
                                     // setGridValue(rowIndex, colIndex, parseInt(e.target.value) || 0)
-                                    setGridValue(rowIndex, colIndex, e)
+                                    setGridValue(rowIndex, colIndex, parseInt(e.target.value) )
                                     }
                                 />
 
@@ -332,6 +273,7 @@ const Board = () => {
             </tbody>
            
             </table>
+
             <div className='buttons'>
                 {/* <button onClick={solveHandler} className={`${(color === true)? '#96948d' : '#c73828'}`} >Solve</button> */}
                 <button onClick={test2Handler} style={{ backgroundColor: color ? "black" : "white" }}>simulate</button>
@@ -341,38 +283,18 @@ const Board = () => {
                 <button onClick={clearBoard} style={{ backgroundColor: color ? "black" : "white" }}>Clear Board</button> */}
             </div>
             <div className="slidecontainer">
+                <span>Enter each number with ',' seperating the numbers with 0 for not filled squares</span>
+                <input onChange={event => setBoardString(event.target.value)} />
                 <span className='nosolution' style={{ visibility: solvable ? 'hidden' : 'visible' }} >Board is not solvable</span>
                 <span className='nosolution' style={{ visibility: solvable && simulateclicked ? 'visible' : 'hidden' }} >Board will be solved in {stack.length}</span>
                 <span className='sliderinfo'>Set speed before start {mySlider}</span>
                 <input type="range" min="1" max="100" value={mySlider} className="slider" id="myRange" 
-                onChange={(e) => setSliderValue(e)}
-                // onChange={(e) => this.setAttribute('value',this.value)}
-                
-                 
-                
-                     />
-                </div>
+                    onChange={(e) => setSliderValue(e)}  />
             </div>
+        </div>
+
     )
 }
 
-// {/* <div className='grid'>
-//                 {grid.map((row, rowIndex) =>
-//                 (
-//                     <div key={rowIndex} className="row">
-//                         {row.map((number, colIndex) => ( 
-//                             <div key={colIndex} className="cell">
-//                                 <input value={number} onChange={(e) =>
-//                                     // setGridValue(rowIndex, colIndex, parseInt(e.target.value) || 0)
-//                                     setGridValue(rowIndex, colIndex, e)
-//                                     }
-//                                 />
-
-//                                 {/* {number} */}
-//                             // </div>
-//                         // ))}
-//                     // </div>
-//                 // ))}
-//             // </div>  
-// */}
 export default Board
+// 3, 0, 6, 5, 0, 8, 4, 0, 0, 5, 2, 0, 0, 0, 0, 0, 0, 0,0, 8, 7, 0, 0, 0, 0, 3, 1, 0, 0, 3, 0, 1, 0, 0, 8, 0, 9, 0, 0, 8, 6, 3, 0, 0, 5, 0, 5, 0, 0, 9, 0, 6, 0, 0, 1, 3, 0, 0, 0, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 7, 4, 0, 0, 5, 2, 0, 6, 3, 0, 0
