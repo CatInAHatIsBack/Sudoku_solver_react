@@ -205,16 +205,6 @@ const Board = () => {
             console.log(grid)
         }
         
-        
-        
-
-        // if inputstring is 81 
-            // split , 
-            // strip
-            // check ints
-            // if all ints 
-            // set board
-        
     }
     function setHandler() {
 
